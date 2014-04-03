@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.css' rel='stylesheet' />
+    <!--[if lt IE 9]>
+      <link href='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.21.0/L.Control.Locate.ie.css' rel='stylesheet' />
+    <![endif]-->
+    <style type="text/css">
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            position: absolute;
+            bottom: 0;
+            top: 120px;
+            width: 100%;
+        }
+        .leaflet-popup .lead {
+            margin-bottom: 4px;
+        }
+
+
+        .leaflet-popup-content {
+            width: 300px;
+        }
+        .leaflet-popup hr {
+            margin-top:6px;
+            margin-bottom: 6px;
+        }
+
+        .leaflet-popup .glyphicon {
+            font-size: 24px;
+            margin-right: 20px;
+        }
+
+        .leaflet-popup img {
+            margin-right: 20px;
+        }
+
+        #legend {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .legend-label {
+            margin-left: 10px;
+        }
+
+        #legend h3 {
+            margin-top: 0px;
+        }
+
+        .jumbotron {
+            line-height: 20px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            background-color: #5c8fea !important;
+            color: white !important;
+            padding-top: 0px !important;
+            padding-bottom: 0px;
+            height: 120px;
+            background: #537ac1;
+            background-color: #5c8fea;
+            background-image: -webkit-linear-gradient(#5c8fea,#537ac1);
+            background-image: linear-gradient(to bottom,#5c8fea,#537ac1);
+        }
+        .jumbotron h2,h4 {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .header {
+            overflow: hidden;
+            position: relative;
+            height: inherit;
+            width: 100%;
+            background-position: 30% 50%;
+            background: url(img/Skyline1.png) bottom no-repeat;
+
+        }
+
+
+        .header img {
+            max-height: 80px;
+            margin-top: 20px;
+        }
+
+        .esri-attribution-logo {
+            display: none;
+        }
+
+        #legendToggle {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            display:none;
+        }
+
+
+        @media (max-width: 768px) {
+            #map {
+                top: 60px;
+            }
+            .jumbtron {
+                height: 60px;
+            }
+            .header img{
+                display: none;
+            }
+
+            .header {
+                background: none;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .leaflet-popup-content {
+                max-width: 220px;
+            }
+        }
+    </style>
+  </head>
+  <body>
+    <div  class="jumbotron">
+      <div class="header row">
+        <h4 class="visible-xs">Rock 'n' Roll Raleigh Marathon</h4>
+        <span class="lead visible-xs">Parking Restrictions Map</span>
+        <div class="col-sm-7">
+        <h3 class="visible-sm visible-md visible-lg">Rock 'n' Roll Raleigh Marathon</h3>
+        <span class="lead">Parking Restrictions Map</span>
+        <h5 class="visible-sm visible-md visible-lg"><i>Sunday, April 13th, 2014</i></h5>
+        </div>
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-4">
+          <img class="pull-right" src="img/City-Seal-white.png"/>
+        </div>
+      </div>
+    </div>  
+    <div id="map"></div>
+    <button id="legendToggle" type="button" class="btn btn-default">Legend</button>
+    <div id="legend" class="legend">
+        <button type="button" class="close" aria-hidden="true">&times;</button>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="black" stroke-width="12" stroke-dasharray="10 10 10 10" opacity="0.15"/>
+            </svg>
+             <span class="legend-label">Marathon Route</span>
+        </div>
+        <span class="lead">Parking Restrictions</span>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="red" stroke-width="10"/>
+            </svg>
+             <span class="legend-label">April 12 8:00 AM to April 13 9:00 AM</span>
+        </div>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="blue" stroke-width="10"/>
+            </svg>
+             <span class="legend-label">April 12 8:00 AM to April 13 6:00 PM</span>
+        </div>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="orange" stroke-width="10"/>
+            </svg>
+             <span class=" legend-label">April 13 3:00 AM to 9:00 AM</span>
+        </div>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="green" stroke-width="10"/>
+            </svg>
+             <span class=" legend-label">April 13 3:00 AM to 11:00 AM</span>
+        </div>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="yellow" stroke-width="10"/>
+            </svg>
+             <span class=" legend-label">April 13 3:00 AM to 3:00 PM</span>
+        </div>
+        <div>
+            <svg class="pull-left" height="20" width="40">
+              <line x1="0" y1="10" x2="40" y2="10" stroke="purple" stroke-width="10"/>
+            </svg>
+             <span class=" legend-label">April 13 3:00 AM to 4:00 PM</span>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-locatecontrol/v0.24.0/L.Control.Locate.js'></script>
+    <script src="js/esri-leaflet.js"></script>
+    <script>
+        function getNoParking (map) {
+            $.getJSON('rnr_nopark.geojson',  function(json, textStatus) {
+                    var geoJson = L.geoJson(json, {
+                        onEachFeature: function (feature, layer) {
+                            if (feature.properties) {
+                                var from = new Date(feature.properties.start),
+                                    to = new Date(feature.properties.end);
+                                layer.bindPopup("<h4 class='lead'><small>No Parking On </small><strong>"+feature.properties.roadon+"</strong></h4><hr/><span class='glyphicon glyphicon-map-marker'></span><strong>" +feature.properties.roadfrom+"</strong> to <strong>"+ feature.properties.roadto+"</strong><br/><span class='glyphicon glyphicon-time'></span>Between <strong>"+moment(from).format('MMMM Do, h:mm a')+"</strong> and <strong>"+moment(to).format('MMMM Do, h:mm a')+"</strong>");
+                            }
+                        }, style: function (feature) {
+                            switch (feature.properties.start+" "+feature.properties.end) {
+                                case "4/13/2014 3:00:00 AM 4/13/2014 3:00:00 PM":
+                                return {color: "yellow", opacity: 1}
+                                case "4/12/2014 8:00:00 AM 4/13/2014 9:00:00 AM":
+                                return {color: "red", opacity: 1}
+                                case "4/13/2014 3:00:00 AM 4/13/2014 9:00:00 AM":
+                                return {color: "orange", opacity: 1}
+                                case "4/13/2014 3:00:00 AM 4/13/2014 11:00:00 AM":
+                                return {color: "green", opacity: 1}
+                                case "4/13/2014 3:00:00 AM 4/13/2014 4:00:00 PM":
+                                return {color: "purple", opacity: 1}
+                                case "4/12/2014 8:00:00 AM 4/13/2014 6:00:00 PM":
+                                return {color: "blue", opacity: 1}
+                            }
+                        }
+                    });
+                    map.fitBounds(geoJson.getBounds());
+                    geoJson.addTo(map);
+            });
+        }
+
+        function getRoute(map) {
+            $.getJSON('rnr_full.geojson',  function(json, textStatus) {
+                    var geoJson = L.geoJson(json, {
+                        style: {"color": "black", "opacity": 0.15, "weight":12, "dashArray" : "20 20 20 20", "lineCap":"square"}
+                    });
+                    geoJson.addTo(map);
+                    getNoParking(map);
+            });
+        }
+        $(document).ready(function () {
+            var map =   L.map('map', {minZoom: 12}).setView([35.78, -78.64447], 12);
+            L.control.locate().addTo(map);
+            L.esri.basemapLayer("Gray").addTo(map);
+            getRoute(map);
+
+            if($(document).width() < 480)
+            {
+                $('#legend').hide();
+                $('#legendToggle').show();
+            }
+            $('.close').click(function () {
+                $('#legend').hide();
+                $('#legendToggle').show();
+            });
+            $('#legendToggle').click(function () {
+                $('#legend').show();
+                $('#legendToggle').hide();
+            });
+
+        });
+    </script>
+  </body>
+</html>
